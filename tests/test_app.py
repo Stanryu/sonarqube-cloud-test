@@ -16,6 +16,7 @@ def reset_state():
 @pytest.fixture
 def client():
     app.config["TESTING"] = True
+    app.config["WTF_CSRF_ENABLED"] = False
     with app.test_client() as c:
         yield c
 
