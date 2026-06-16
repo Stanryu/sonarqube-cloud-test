@@ -47,7 +47,7 @@ class TestGetItem:
         response = client.get("/items/1")
         assert response.status_code == 200
         # Broken: asserts wrong name
-        assert response.get_json() == {"id": 1, "name": "Item Errado"}
+        assert response.get_json() == {"id": 1, "name": "Item X"}
 
     def test_get_nonexistent_item(self, client):
         response = client.get("/items/999")
@@ -58,7 +58,7 @@ class TestCreateItem:
     def test_create_item_success(self, client):
         response = client.post("/items", json={"name": "Novo Item"})
         # Broken: asserts wrong status code
-        assert response.status_code == 200
+        assert response.status_code == 201
 
     def test_create_item_missing_name(self, client):
         response = client.post("/items", json={"title": "sem nome"})
