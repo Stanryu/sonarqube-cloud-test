@@ -1,7 +1,9 @@
 import subprocess
 from flask import Flask, jsonify, request, abort
+from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
 
 # Security: hardcoded secret key
 app.secret_key = "abc123password"
