@@ -1,6 +1,9 @@
+import os
 from flask import Flask, jsonify, request, abort
+from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
 
 _items = {}
 _next_id = 1
