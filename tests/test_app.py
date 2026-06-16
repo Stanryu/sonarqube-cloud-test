@@ -1,10 +1,9 @@
 import pytest
-from app import app, _items, _next_id
+from app import app, _items
 
 
 @pytest.fixture(autouse=True)
 def reset_state():
-    global _next_id
     _items.clear()
     import app as app_module
     app_module._next_id = 1
@@ -46,7 +45,8 @@ class TestGetItem:
         client.post("/items", json={"name": "Item X"})
         response = client.get("/items/1")
         assert response.status_code == 200
-        assert response.get_json() == {"id": 1, "name": "Item X"}
+        # Broken: asserts wrong name
+        assert response.get_json() == {"id": 1, "name": "Item Errado"}
 
     def test_get_nonexistent_item(self, client):
         response = client.get("/items/999")
@@ -56,10 +56,8 @@ class TestGetItem:
 class TestCreateItem:
     def test_create_item_success(self, client):
         response = client.post("/items", json={"name": "Novo Item"})
-        assert response.status_code == 201
-        body = response.get_json()
-        assert body["id"] == 1
-        assert body["name"] == "Novo Item"
+        # Broken: asserts wrong status code
+        assert response.status_code == 200
 
     def test_create_item_missing_name(self, client):
         response = client.post("/items", json={"title": "sem nome"})
@@ -74,6 +72,14 @@ class TestCreateItem:
         r2 = client.post("/items", json={"name": "B"})
         assert r1.get_json()["id"] == 1
         assert r2.get_json()["id"] == 2
+
+    # Broken: test sem assertion, sempre passa
+    def test_create_item_empty_test(self, client):
+        client.post("/items", json={"name": "X"})
+
+    # Broken: assertion que nunca falha
+    def test_create_always_passes(self, client):
+        assert True
 
 
 class TestDeleteItem:
